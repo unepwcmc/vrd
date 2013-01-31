@@ -1,0 +1,10 @@
+@import "leaflet-ie";
+
+.navbar-fixed-top .navbar-inner {
+  filter: none;
+  background-image: image-url('navbar_background.png');
+}
+
+a, a:hover, a:active, a:focus {
+  outline: none;
+}

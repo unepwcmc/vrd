@@ -1,0 +1,1 @@
+http://carbon-tool.cartodb.com/api/v2/sql?q=SELECT id_feed, name, total_by<%= reporter %> FROM countries_ccb_vrd WHERE ST_Contains(the_geom, ST_GeomFromText('POINT(<%= lng %> <%= lat %>)', 4326))

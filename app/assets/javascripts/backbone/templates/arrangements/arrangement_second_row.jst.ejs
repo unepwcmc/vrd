@@ -1,0 +1,22 @@
+<td>
+  <a href="/arrangements/<%= model.id_feed %>">
+    <span class="period"><%= model.period_from %> - <%= model.period_to %></span>
+    <span class="outer_line"><span class="inner" style="width:<%= period_interval %>px;margin-left:<%= period_start %>px">&nbsp;</div></div>
+  </a>
+</td>
+<td>
+  <a href="/arrangements/<%= model.id_feed %>">
+    <span class="funder"><%= (model.funder && model.funder.name) || '-' %></span>
+  </a>
+</td>
+<td>
+  <a href="/arrangements/<%= model.id_feed %>">
+    <span class="recipient"><%= (model.arrangement_type == 'unspecified' && 'Unspecified or multiple') || (model.recipient && model.recipient.name) || '-' %></span>
+  </a>
+</td>
+<td class="total_amount">
+  <a href="/arrangements/<%= model.id_feed %>">
+    <span class="amount">$<%= Math.floor(model.total_amount * 100) / 100 %>M</span>
+    <span class="outer_line"><span class="inner" style="width:<%= amount_percentage %>px">&nbsp;</span></span>
+  </a>
+</td>

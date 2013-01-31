@@ -1,0 +1,25 @@
+@import "bootstrap-variables";
+@import "bootstrap.scss";
+@import "responsive";
+
+.page-header {
+  a.btn {
+    float: right;
+  }
+
+  a.btn + a.btn {
+    margin-right: 8px;
+  }
+}
+
+.tooltip {
+  &.in {
+    opacity: 1;
+    filter: alpha(opacity=100);
+  }
+
+  .tooltip-inner {
+    padding: 13px 18px;
+    text-align: left;
+  }
+}

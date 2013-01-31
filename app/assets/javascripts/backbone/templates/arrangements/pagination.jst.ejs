@@ -1,0 +1,9 @@
+<div class="prev span2">
+  <a<% if(prev < 1) { %> class="disabled"<% } %> href="#">Previous</a>
+</div>
+<div class="pages span8">
+  Showing <em><% if(total == 0) { %>0<% } else { %><%= ((page - 1) * 20) + 1 %><% } %> to <%= Math.min((page) * 20, total) %></em> of <em><%= total %></em> entries
+</div>
+<div class="next span2">
+  <a<% if(next > pages) { %> class="disabled"<% } %> href="#">Next</a>
+</div>

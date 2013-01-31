@@ -1,0 +1,225 @@
+<div class="row">
+  <div class="span12 title">
+    <h2>Overview</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+    <div class="reported_by">
+      <span>View information reported by</span>
+      <ul class="nav nav-pills">
+        <%= content_tag :li, link_to('Funders', reported_by_path(reported_by: 'funders')), class: @reported_by == 'funders' ? 'active' : nil %></a></li>
+        <%= content_tag :li, link_to('Recipients', reported_by_path(reported_by: 'recipients')), class: @reported_by == 'funders' ? nil : 'active' %></a></li>
+      </ul>
+      <a class="help" title="The information on this site (maps, graphs, statistics and arrangement lists) may be viewed reported by funders or reported by recipients. To alternate between these two views, select funders or recipients from this dropdown box."></a>
+    </div>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#tab_introduction" data-toggle="tab">Introduction</a></li>
+      <li><a href="#tab_graphs_and_stats" data-toggle="tab">Graphs &amp; Stats</a></li>
+      <li><a href="#tab_arrangements" data-toggle="tab">Arrangments list</a></li>
+      <li><a href="#tab_fsf_report" data-toggle="tab">FSF report</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab_introduction">
+        <div class="row">
+          <div class="span12">
+            <div class="img-polaroid">
+              <div id="map_canvas"></div>
+            </div>
+            <p>
+              <small>
+                Funders (orange) and recipients (green) of REDD+ financial contributions, as reported by <%= @reported_by %>. Click on the circles above to view REDD+ financing provided/received for a given country.
+                <a class="map_tooltip" title='This map shows funders and recipients of REDD+ financial contributions, as reported to the database by <%= @reported_by %>. Two sets of information are displayed: 1) Amount of REDD+ financing from individual funder countries (orange) to others, including any internal financing with benefits to REDD+ countries, and 2) amount of REDD+ financing to REDD+ countries (green) from <%= @reported_by == 'funders' ? 'funders' : 'others' %>, including domestic financing as reported by <%= @reported_by %> countries.'><i class="icon-question-sign"></i></a>
+              </small>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="span6">
+            <h2>Welcome to the Voluntary REDD+ Database</h2>
+            <p>
+              The Voluntary REDD+ Database (VRD) provides information on REDD+ financing, actions and results that has been reported to the REDD+ Partnership.
+              It aims to improve effectiveness, efficiency, transparency and coordination of REDD+ initiatives; and to support efforts to identify and analyze gaps and overlaps in REDD+ financing.
+              The Database relies solely on data voluntarily submitted by countries and institutions.
+              The statistics, maps, graphs and lists of arrangements on this site may be viewed as "reported by funders" or "reported by recipients", through the drop down in the upper right hand side of this page.
+              Data may also be viewed for individual countries and institutions, by following the links in the top right hand side of this page or by clicking on individual countries in the map above.
+              For more details on how to use the VRD to answer your REDD+ financing questions, please click on the user guide link below.
+            </p>
+          </div>
+          <div class="span6">
+            <div id="diagram">
+              <div class="funder_countries entity">Funder Countries</div>
+              <div class="funder_countries_to_multilateral_institutions amount"><span><%= diagram_amount_format @funder_countries_to_multilateral_institutions_funding %></span></div>
+              <div class="funder_countries_to_redd_plus_countries amount"><span><%= diagram_amount_format @funder_countries_to_redd_plus_countries_funding %></span></div>
+              <div class="multilateral_institutions_and_redd_plus_countries">
+                <div class="multilateral_institutions entity">Multilateral Institutions</div>
+                <div class="redd_plus_countries entity">REDD+ Countries</div>
+              </div>
+              <div class="multilateral_institutions_to_redd_plus_countries amount"><span><%= diagram_amount_format @multilateral_institutions_to_redd_countries_funding %></span></div>
+            </div>
+
+            <div class="row">
+              <div class="span6">
+                <p>Bilateral and multilateral flows of financial contributions to REDD+ countries, as reported by <%= @reported_by %>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span12">
+            <div>The database currently holds information submitted by:</div>
+          </div>
+        </div>
+
+        <div class="row statistics">
+          <div class="span3 funder_countries">
+            <div class="value"><%= @funder_countries %></div>
+            <div class="title"><%= t '.statistics.funder_countries', count: @funder_countries %></div>
+          </div>
+          <div class="span3 redd_plus_countries">
+            <div class="value"><%= @redd_plus_countries %></div>
+            <div class="title"><%= t '.statistics.redd_plus_countries', count: @redd_plus_countries %></div>
+          </div>
+          <div class="span3 overview_institutions">
+            <div class="value"><%= @overview_institutions %></div>
+            <div class="title"><%= t '.statistics.institutions', count: @overview_institutions %></div>
+          </div>
+          <div class="span3 private_sector_entities">
+            <div class="value"><%= @private_sector_entities %></div>
+            <div class="title"><%= t '.statistics.private_sector_entities', count: @private_sector_entities %></div>
+          </div>
+        </div>
+
+        <div class="row redd_plus_arrangements">
+          <div class="span12">
+            <div><%= t '.redd_plus_arrangements_html', count: @redd_plus_arrangements %></div>
+          </div>
+        </div>
+
+        <div class="row footer-links">
+          <div class="span4">
+            <h4 class="about">About REDD+</h4>
+            <p>Click <%= link_to 'here', about_path %> to find out more about REDD+, the REDD+ Partnership, and the Voluntary REDD+ Database</p>
+          </div>
+          <div class="span4">
+            <h4 class="guide">User Guide</h4>
+            <p>Click <%= link_to 'here', guide_path %> for more details on how to use the VRD to answer your REDD+ financing questions</p>
+          </div>
+          <div class="span4">
+            <h4 class="help_us_improve">Help us improve the Database</h4>
+            <p>Click <%= link_to 'here', submit_path %> to submit data from your country or institution to the Voluntary REDD+ Database</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="tab_graphs_and_stats">
+        <%= javascript_tag do -%>
+          window.VRD = window.VRD || {};
+          window.VRD.total_funding_by_type_overview = <%= @total_funding_by_type.to_json.html_safe %>;
+          window.VRD.total_funding_per_year_overview =  <%= @total_funding_per_year_overview.to_json.html_safe %>;
+          window.VRD.total_funding_per_region_overview =  <%= @total_funding_per_region_overview.to_json.html_safe %>;
+          window.VRD.counts_by_action_category_overview =  <%= @counts_by_action_category.to_json.html_safe %>;
+        <% end %>
+
+        <h3>How much financing has been reported for REDD+?</h3>
+
+        <!-- #1 graph (total funding by type) -->
+        <div id="total_funding_by_type_overview"></div>
+
+        <p>Total funding for REDD+ (<%= '2006' || @from_year %> - <%= '2017' || @to_year %>) by funder and recipient type, as reported by <%= @reported_by %></p>
+
+        <% if @reported_by == 'funders' %>
+          <p>
+            This graph shows total financial contribution amounts for REDD+ arrangements between funder countries, REDD+ countries and institutions from <%= '2006' || @from_year %> to <%= '2017' || @to_year %>, as reported by funders.
+          </p>
+        <% else %>
+          <p>
+            This graph shows total financial contribution amounts for REDD+ arrangements between funder countries, REDD+ countries and institutions from <%= '2006' || @from_year %> to <%= '2017' || @to_year %>, as reported by recipients.
+          </p>
+        <% end %>
+
+        <p>
+          August 2012 update: the estimates for total REDD+ financing, as reported in the VRD, have recently changed significantly.
+          As part of ongoing efforts to address discrepancies and data quality issues in the database, the VRD Team has been in communication with countries and institutions to remove inconsistencies in reported data, including pre-2006 funding which predates REDD+ as a concept.
+          The result is an overall decrease in reported REDD+ financing as shown in the graph above.
+        </p>
+
+        <h3>What is the distribution of financing to REDD+ countries over time?</h3>
+
+        <!-- #2 graph (total funding per year) -->
+        <div id="total_funding_per_year_overview"></div>
+
+        <p>
+          Total outgoing and domestic financial contributions to REDD+ countries over time (<%= '2006' || @from_year %> - <%= '2017' || @to_year %>), as reported by <%= @reported_by %>.
+        </p>
+
+        <h3>What is the regional distribution of financing to/from REDD+ countries?</h3>
+
+        <!-- #3 graph (total funding per region) -->
+        <div id="total_funding_per_region_overview"></div>
+
+        <p>
+          Regional distribution of outgoing and domestic financial contributions to REDD+ countries, as reported by <%= @reported_by %>.
+        </p>
+
+        <h3>What types of actions are being undertaken in REDD+ arrangements?</h3>
+
+        <!-- #4 graph (counts by action category) -->
+        <div id="counts_by_action_category_overview"></div>
+
+        <p>
+          The types of actions that are specified in arrangements, as reported by <%= @reported_by %>.
+          This is not a comprehensive list as actions have not been reported for all arrangements.
+          Arrangements can specify more than one action, so the total number of actions is greater than the number of arrangements.
+          The purpose of this graph is to demonstrate the types of actions being recorded in arrangements; it does <strong>not</strong> show how much finance is going to different action categories.
+        </p>
+      </div>
+      <div class="tab-pane" id="tab_arrangements">
+        <table id="arrangements_table" class="table">
+          <thead>
+            <tr>
+              <th>
+                Timespan <span id="timespan_range" class="slider_range"></span><br />
+                <span id="timespan_slider" class="slider"></span>
+              </th>
+              <th>
+                Funder<br />
+                <%= select "funder", "id", @arrangements_list_funders, {include_blank: 'All'} %>
+              </th>
+              <th>
+                Recipient<br />
+                <%= select "recipient", "id", @arrangements_list_recipients, {include_blank: 'All'} %>
+              </th>
+              <th>
+                Amount <span id="amount_range" class="slider_range"></span><br />
+                <span id="amount_slider" class="slider"></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot id="arrangements_footer"></tfoot>
+        </table>
+        <div id="arrangements_pagination" class="row"></div>
+      </div>
+      <div class="tab-pane" id="tab_fsf_report">
+        <%= render 'fast_start' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    window.router = new Vrdb.Routers.ArrangementsRouter({
+      arrangements: <%= @arrangements_list.to_json.html_safe %>,
+      cartodb_geom_table: '<%= APP_CONFIG['cartodb_geom_table'] %>',
+      cartodb_point_table: '<%= APP_CONFIG['cartodb_point_table'] %>'
+    });
+    Backbone.history.start();
+  });
+</script>
+
+<!-- Map Popup -->
+<div id="map_popup" style="display:none"></div>

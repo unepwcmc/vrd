@@ -1,0 +1,15 @@
+development:
+  cartodb_geom_table: 'countries_ccb_vrd'
+  cartodb_point_table: 'countries_ccb_vrd_centroids'
+
+test:
+  cartodb_geom_table: 'countries_ccb_vrd'
+  cartodb_point_table: 'countries_ccb_vrd_centroids'
+
+staging:
+  cartodb_geom_table: 'countries_ccb_vrd'
+  cartodb_point_table: 'countries_ccb_vrd_centroids'
+
+production:
+  cartodb_geom_table: 'countries_ccb_vrd'
+  cartodb_point_table: 'countries_ccb_vrd_centroids'

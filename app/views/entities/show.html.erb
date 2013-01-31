@@ -1,0 +1,218 @@
+<div class="row">
+  <div class="span12 title">
+    <h2><%= @institution %></h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+    <div class="reported_by">
+      <span>View information reported by</span>
+      <ul class="nav nav-pills">
+        <%= content_tag :li, link_to(truncate(@institution.to_s), entity_reported_by_path(id: @institution, reported_by: 'self')), class: @reported_by == 'self' ? 'active' : nil %></a></li>
+        <%= content_tag :li, link_to('Others', entity_reported_by_path(id: @institution, reported_by: 'others')), class: @reported_by == 'self' ? nil : 'active' %></a></li>
+      </ul>
+      <a class="help" title="The information on this site (maps, graphs, statistics and arrangement lists) may be viewed reported by <%= @institution %> or reported by others. To alternate between these two views, select <%= @institution %> or others from this dropdown box."></a>
+    </div>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#tab_introduction" data-toggle="tab">Introduction</a></li>
+      <li><a href="#tab_graphs_and_stats" data-toggle="tab">Graphs &amp; Stats</a></li>
+      <li><a href="#tab_arrangements" data-toggle="tab">Arrangments list</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab_introduction">
+        <div class="img-polaroid">
+          <div id="map_canvas" class='entity-map'></div>
+        </div>
+
+        <div class="row country_funding_information">
+          <div class="span3">
+            <h4><span>Incoming funding</span></h4>
+            <p class="value"><%= funding_amount_format @incoming_funding %></p>
+            <p>Reported by <%= reported_by_humanize %></p>
+          </div>
+          <div class="span3">
+            <h4><span>Domestic or internal funding</span></h4>
+            <p class="value"><%= funding_amount_format @domestic_funding %></p>
+            <p>Reported by <%= reported_by_humanize %></p>
+          </div>
+          <div class="span3">
+            <h4><span>Outgoing funding</span></h4>
+            <p class="value"><%= funding_amount_format @outgoing_funding %></p>
+            <p>Reported by <%= reported_by_humanize %></p>
+          </div>
+          <div class="span3">
+            <h4><span>Outgoing funding (unspecified or multiple recipients)</span></h4>
+            <p class="value"><%= funding_amount_format @unspecified_funding %></p>
+            <p>Reported by <%= reported_by_humanize %></p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span12">
+            <h3>For <%= @institution %>, the database currently holds information submitted by:</h3>
+          </div>
+        </div>
+
+        <div class="row country_database_information">
+          <% if @self_has_reported %>
+            <div class="span3">
+              <span class="circle globe">&nbsp;</span>
+              <%= @institution %>
+            </div>
+          <% end %>
+          <% if @funder_countries > 0 %>
+            <div class="span3">
+              <span class="circle"><%= @funder_countries %></span>
+              Funder countries
+            </div>
+          <% end %>
+          <% if @redd_plus_countries > 0 %>
+            <div class="span3">
+              <span class="circle"><%= @redd_plus_countries %></span>
+              REDD+ countries
+            </div>
+          <% end %>
+          <% if @funder_institutions > 0 %>
+            <div class="span3">
+              <span class="circle"><%= @funder_institutions %></span>
+              Institutions
+            </div>
+          <% end %>
+          <% if @private_sector_entities > 0 %>
+            <div class="span3">
+              <span class="circle"><%= @private_sector_entities %></span>
+              Private sector entities
+            </div>
+          <% end %>
+          <% if @total_arrangements > 0 %>
+            <div class="span3">
+              <span class="circle green"><%= @total_arrangements %></span>
+              Total # of REDD+ arrangements
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tab_graphs_and_stats">
+        <%= javascript_tag do -%>
+          window.VRD = window.VRD || {};
+          window.VRD.total_funding_per_year_entity =  <%= @total_funding_per_year_entity.to_json.html_safe %>;
+          window.VRD.financing_flows_entity =  <%= @financing_flows_entity.to_json.html_safe %>;
+          window.VRD.counts_by_action_category_entity =  <%= @counts_by_action_category.to_json.html_safe %>;
+        <% end %>
+
+        <% if @arrangements_list[:total] == 0 %>
+          <p>No data reported by <%= @reported_by == 'self' ? @institution : 'others' %></p>
+        <% else %>
+          <% if @institution.funder_country? %>
+            <h1>What is the distribution of REDD+ financing from <%= @institution %> over time?</h1>
+          <% elsif @institution.redd_plus_country? %>
+            <h1>What is the distribution of REDD+ financing to <%= @institution %> over time?</h1>
+          <% else %>
+            <h1>What is the distribution of REDD+ financing to/from <%= @institution %> over time?</h1>
+          <% end %>
+
+          <!-- #1 graph (total funding per year) -->
+          <div id="total_funding_per_year_entity"></div>
+
+          <% if @reported_by == 'self' %>
+            <p>
+              Total financial contributions to/from <%= @institution %>, as reported by <%= @institution %>.
+              These values include internal/domestic financing, where applicable.
+            </p>
+          <% else %>
+            <p>
+              Total financial contributions to/from <%= @institution %>, as reported by others.
+            </p>
+          <% end %>
+
+          <!--[if gt IE 8]><!-->
+            <h1>What are the flows of REDD+ financing?</h1>
+
+            <!-- #2 graph (financing flows) -->
+            <div id="funding-flow-container">
+              <div id="funding-flow-graph"></div>
+              <div id="funding-flow-sidepanel">
+                <div id="funding-flow-legend">
+                  <span class='box'>Receiving</span>
+                  <span class='box funding'>Funding</span>
+                  <span class='box indirect'>Indirect Funding</span>
+                </div>
+                <div id="funding-flow-tooltip"></div>
+              </div>
+            </div>
+
+            <p>Flows of direct and indirect financial contributions to/from <%= @institution %>, as reported by both <%= @institution %> and others.</p>
+          <!--<![endif]-->
+
+          <h1>What types of actions are being undertaken in REDD+ arrangements?</h1>
+
+          <!-- #3 graph (counts by action category) -->
+          <div id="counts_by_action_category_entity"></div>
+
+          <% if @reported_by == 'self' %>
+            <p>
+              Actions to be undertaken in REDD+ arrangements involving <%= @institution %>, as reported by <%= @institution %>.
+              The graph represents all arrangements reported by <%= @institution %> to the database that specify actions to be undertaken (presently, <%= @arrangements_with_category_as_recipient %> out of <%= @arrangements_list[:total] %> arrangements where <%= @institution %> is a recipient, and <%= @arrangements_with_category_as_funder %> out of <%= @arrangements_list[:total] %> arrangements where <%= @institution %> is a funder).
+              It should be noted that since more than one action can be undertaken in an arrangement, some arrangements will be included in more than one action category. The purpose of this graph is to demonstrate the types of actions being recorded in arrangements reported by <%= @institution %>; it does not show how much finance is going to different action categories.
+            </p>
+          <% else %>
+            <p>
+              Actions to be undertaken in REDD+ arrangements involving <%= @institution %>, as reported by others.
+              The graph represents all arrangements reported by others to the database that specify actions to be undertaken (presently, <%= @arrangements_with_category_as_recipient %> out of <%= @arrangements_list[:total] %> arrangements where <%= @institution %> is a recipient, and <%= @arrangements_with_category_as_funder %> out of <%= @arrangements_list[:total] %> arrangements where <%= @institution %> is a funder).
+              It should be noted that since more than one action can be undertaken in an arrangement, some arrangements will be included in more than one action category. The purpose of this graph is to demonstrate the types of actions being recorded in arrangements involving <%= @institution %>, as reported by others; it does not show much finance is going to different action categories.
+            </p>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="tab-pane" id="tab_arrangements">
+        <table id="arrangements_table" class="table">
+          <thead>
+            <tr>
+              <th>
+                Timespan <span id="timespan_range" class="slider_range"></span><br />
+                <span id="timespan_slider" class="slider"></span>
+              </th>
+              <th>
+                Funder<br />
+                <%= select "funder", "id", @arrangements_list_funders, {include_blank: 'All'} %>
+              </th>
+              <th>
+                Recipient<br />
+                <%= select "recipient", "id", @arrangements_list_recipients, {include_blank: 'All'} %>
+              </th>
+              <th>
+                Amount <span id="amount_range" class="slider_range"></span><br />
+                <span id="amount_slider" class="slider"></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot id="arrangements_footer"></tfoot>
+        </table>
+        <div id="arrangements_pagination" class="row"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    window.router = new Vrdb.Routers.EntitiesRouter({entity:<%= @institution.to_json.html_safe %> ,
+      totals_by_institution: <%= @totals_by_institution.to_json.html_safe %>,
+      total_funding_per_year_entity: <%= @total_funding_per_year_entity.to_json.html_safe %>,
+      max_contribution_year: <%= @max_contribution_year %>,
+      arrangement_counts_by_action_category: <%= @arrangement_counts_by_action_category.to_json.html_safe %>,
+      arrangements: <%= @arrangements_list.to_json.html_safe %>,
+      cartodb_geom_table: '<%= APP_CONFIG['cartodb_geom_table'] %>',
+      cartodb_point_table: '<%= APP_CONFIG['cartodb_point_table'] %>',
+      reported_by: '<%= @reported_by %>'
+    });
+    Backbone.history.start();
+  });
+</script>
+
+<!-- Map Popup -->
+<div id="map_popup" style="display:none"></div>

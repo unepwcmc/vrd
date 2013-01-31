@@ -1,0 +1,126 @@
+<div class="row arrangement">
+  <div class="span8">
+    <h2><%= @arrangement %></h2>
+    <p>
+      <small>An arrangement reported by <%= @arrangement.reporting_institution %>. Page last updated: <%= @arrangement.humanize_last_published_update %></small>
+    </p>
+
+    <div class="row">
+      <div class="span4">
+        <h4>Funder</h4>
+        <% if @arrangement.funder %>
+          <%= link_to @arrangement.funder, entity_path(@arrangement.funder) %>
+        <% else %>
+          -
+        <% end %>
+      </div>
+      <div class="span4">
+        <h4>Recipient</h4>
+        <% if @arrangement.arrangement_type == 'unspecified' %>
+          Unspecified or multiple
+        <% elsif @arrangement.recipient %>
+          <%= link_to @arrangement.recipient, entity_path(@arrangement.recipient) %>
+        <% else %>
+          -
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <h4>Beneficiary regions</h4>
+        <ul class="unstyled">
+          <%= render @arrangement.beneficiary_regions %>
+          <% if @arrangement.beneficiary_regions.empty? %>
+            <li>-</li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="span4">
+        <h4>Beneficiary countries</h4>
+        <ul class="unstyled">
+          <%= render @arrangement.beneficiary_countries %>
+          <% if @arrangement.beneficiary_countries.empty? %>
+            <li>-</li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+
+    <h4>Arrangement description</h4>
+    <%= @arrangement.description.try(:html_safe) %>
+
+    <% if @arrangement.action_categories.any? %>
+      <h4>Actions to be undertaken</h4>
+      <ul>
+        <%= render @arrangement.action_categories %>
+      </ul>
+    <% end %>
+
+    <h4>Financing Status</h4>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th rowspan="2"></th>
+          <th class="millions" colspan="<%= @arrangement.years.size + 1 %>">Millions of USD</th>
+        </tr>
+        <tr>
+          <% @arrangement.years.each do |year| %>
+            <th><%= year %></th>
+          <% end %>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="description">Contributions</td>
+          <%= render partial: 'contributions', locals: { arrangement: @arrangement } %>
+        </tr>
+        <tr>
+          <td class="description">Disbursements</td>
+          <%= render partial: 'disbursements', locals: { arrangement: @arrangement } %>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      <small><strong>~</strong> Distribution of funding between years is estimated</small>
+    </p>
+
+    <h4>Additional notes</h4>
+    <%= @arrangement.additional_notes.try(:html_safe) %>
+  </div>
+  <div class="span4">
+    <div class="glance">
+      <h3>At a glance</h3>
+
+      <hr />
+      
+      <h4>Funding amount</h4>
+      <p><%= @arrangement.total_amount %> million USD</p>
+
+      <hr />
+      
+      <h4>Time period</h4>
+      <p><%= @arrangement.period_from %>-<%= @arrangement.period_to %></p>
+
+      <%= content_tag :hr if (@arrangement.funder.country? && @arrangement.financing_type == 'outgoing' && !@arrangement.fast_start_finance.nil?) || @arrangement.phases.any? %>
+
+      <% if @arrangement.funder.country? && @arrangement.arrangement_type == 'outgoing' && !@arrangement.fast_start_finance.nil? %>
+        <p>Arrangement is considered part of <%= @arrangement.funder %>'s fast-start finance package</p>
+      <% end %>
+
+      <% if @arrangement.phases.any? %>
+      <p>Arrangement is for REDD+ Phases: <%= @arrangement.phases.to_sentence %></p>
+      <% end %>
+    </div>
+
+    <% if @arrangement.similar_arrangements.any? %>
+      <div class="similar_arrangements">
+        <h4>Similar arrangements</h4>
+        <ul class="unstyled">
+          <%= render @arrangement.similar_arrangements %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>

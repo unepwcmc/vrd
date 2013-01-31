@@ -1,0 +1,22 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  overview:
+    index:
+      statistics:
+        funder_countries:
+          one: 'Funder Country'
+          other: 'Funder Countries'
+        redd_plus_countries:
+          one: 'REDD+ Country'
+          other: 'REDD+ Countries'
+        institutions:
+          one: 'Institution'
+          other: 'Institutions'
+        private_sector_entities:
+          one: 'Private Sector Entity'
+          other: 'Private Sector Entities'
+      redd_plus_arrangements_html:
+        one: 'Reporting a total of <span class="value">1</span> REDD+ arrangement'
+        other: "Reporting a total of <span class=\"value\">%{count}</span> REDD+ arrangements"

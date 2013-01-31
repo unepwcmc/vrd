@@ -1,0 +1,19 @@
+<div class="row static">
+  <div class="span8">
+    <h2>Downloading Data</h2>
+    <p>
+      The data reported to the Voluntary REDD+ Database by countries and institutions are freely available for download in csv format.
+      To download the csv sheet containing all arrangement records reported to the Database, click on the “Download data” link below.
+      Please also refer to the “Description of fields” PDF for an explanation of fields used in the csv sheet. The csv sheet is updated with new data on a weekly basis.
+    </p>
+
+    <ul>
+      <li><%= link_to 'Download data', download_path(format: 'csv') %></li>
+      <li><%= link_to 'Explanation of fields', '/fields_description.pdf' %></li>
+    </ul>
+    <p>Please cite as REDD+ Partnership (2012). The Voluntary REDD+ Database. Managed by FAO, Rome, Italy and UNEP World Conservation Monitoring Centre, Cambridge, UK. Downloaded <%= Time.now.strftime("%d %B %Y") %>.</p>
+  </div>
+  <div class="span4">
+    <%= render 'menu' %>
+  </div>
+</div>

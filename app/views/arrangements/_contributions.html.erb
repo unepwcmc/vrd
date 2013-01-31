@@ -1,0 +1,4 @@
+<% arrangement.years.each do |year| %>
+  <td><%= sprintf("%#1.2f", arrangement.contribution_for_year(year)) %></td>
+<% end %>
+<td><%= "~ " if @arrangement.estimate %><%= sprintf("%#1.2f", @arrangement.total_amount) %></td>

@@ -1,0 +1,11 @@
+<ul class="unstyled menu">
+  <%= content_tag :li, link_to("About the VRD", about_path), class: (params[:action] == 'about' ? 'active' : nil) %>
+  <%= content_tag :li, link_to("Submitting Data", submit_path), class: (params[:action] == 'submit' ? 'active' : nil) %>
+  <%= content_tag :li, link_to("Downloading Data", download_path), class: (params[:action] == 'download' ? 'active' : nil) %>
+  <%= content_tag :li, link_to("Terms and Conditions", terms_path), class: (params[:action] == 'terms' ? 'active' : nil) %>
+  <%= content_tag :li, link_to("Glossary", glossary_path), class: (params[:action] == 'glossary' ? 'active' : nil) %>
+  <%= content_tag :li, link_to("Frequently Asked Questions", faq_path), class: (params[:action] == 'faq' ? 'active' : nil) %>
+  <%= content_tag :li, link_to("User Guide", guide_path), class: (params[:action] == 'guide' ? 'active' : nil) %>
+  <%= content_tag :li, link_to("Resources and Publications", resources_path), class: (params[:action] == 'resources' ? 'active' : nil) %>
+  <%= content_tag :li, link_to("Contact the VRD Team", contact_path), class: (params[:action] == 'contact' ? 'active' : nil) %>
+</ul>
